@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sorted Student List</title>
+<style>
+  body {
+    font-family: "Segoe UI", sans-serif;
+    background: linear-gradient(to right, #89f7fe, #66a6ff);
+    text-align: center; margin:0; padding:40px;
+  }
+  h1 { color:#0d47a1; }
+  table {
+    margin:auto; border-collapse:collapse; width:80%;
+    background:white; border-radius:10px;
+    box-shadow:0 0 10px rgba(0,0,0,0.2);
+  }
+  th,td { border:1px solid #ccc; padding:10px; }
+  th { background:#1976d2; color:white; }
+  tr:nth-child(even){background:#f2f2f2;}
+  a { display:inline-block;margin-top:20px;text-decoration:none;color:#0d47a1;font-weight:bold; }
+  a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<h1>📚 Sorted Student List</h1>
+<table id="list">
+  <tr>
+    <th>Roll No</th><th>Name</th><th>Department</th><th>Marks</th>
+  </tr>
+</table>
+<p id="msg"></p>
+<a href="index.html">⬅️ Back to Home</a>
+
+<script>
+  const data = JSON.parse(localStorage.getItem("students")) || [];
+  const table = document.getElementById("list");
+  const msg = document.getElementById("msg");
+
+  if(data.length===0){
+    msg.textContent="No students added yet. Go back and add some!";
+  }else{
+    data.sort((a,b)=>a.roll-b.roll);
+    data.forEach(s=>{
+      const row=table.insertRow();
+      row.insertCell(0).innerText=s.roll;
+      row.insertCell(1).innerText=s.name;
+      row.insertCell(2).innerText=s.dept;
+      row.insertCell(3).innerText=s.marks;
+    });
+  }
+</script>
+</body>
+</html>
+
+
+
+
+
+

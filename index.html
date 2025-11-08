@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Search System (Binary Search)</title>
+<style>
+  body {
+    font-family: "Segoe UI", sans-serif;
+    background: linear-gradient(to right, #74ebd5, #ACB6E5);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    min-height: 100vh; margin: 0;
+  }
+  h1 { color: #333; }
+  .box {
+    background: #fff; padding: 25px 30px; width: 380px;
+    border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  }
+  label { font-weight: bold; display: block; margin-top: 10px; }
+  input {
+    width: 100%; padding: 8px; margin-top: 5px;
+    border: 1px solid #ccc; border-radius: 6px;
+  }
+  button {
+    margin-top: 15px; padding: 10px;
+    width: 100%; border: none;
+    color: white; font-weight: bold; cursor: pointer;
+    border-radius: 6px;
+  }
+  .add { background: #43a047; } .add:hover { background: #2e7d32; }
+  .search { background: #1976d2; } .search:hover { background: #0d47a1; }
+  .link { display:block;margin-top:15px;text-decoration:none;color:#0d47a1;font-weight:bold;text-align:center;}
+  #output { margin-top:15px;font-weight:500; }
+  .found { color:green;font-weight:bold; }
+  .notfound { color:red;font-weight:bold; }
+</style>
+</head>
+<body>
+<h1>Student Search System (Binary Search)</h1>
+<div class="box">
+  <label>Roll Number</label>
+  <input type="number" id="roll" placeholder="Enter Roll No">
+  <label>Name</label>
+  <input type="text" id="name" placeholder="Enter Name">
+  <label>Department</label>
+  <input type="text" id="dept" placeholder="Enter Department">
+  <label>Marks</label>
+  <input type="number" id="marks" placeholder="Enter Marks">
+  <button class="add" onclick="addStudent()">Add Student</button>
+
+  <hr>
+
+  <label>Search Roll Number</label>
+  <input type="number" id="searchRoll" placeholder="Enter Roll No to Search">
+  <button class="search" onclick="searchStudent()">Search</button>
+
+  <div id="output"></div>
+  <a href="sorted.html" class="link">📋 View Sorted Student List</a>
+</div>
+
+<script>
+  // Load saved students from localStorage
+  let students = JSON.parse(localStorage.getItem("students")) || [];
+
+  function addStudent() {
+    const roll = parseInt(document.getElementById("roll").value);
+    const name = document.getElementById("name").value.trim();
+    const dept = document.getElementById("dept").value.trim();
+    const marks = parseInt(document.getElementById("marks").value);
+
+    if (!roll || !name || !dept || isNaN(marks)) {
+      alert("⚠️ Please fill all fields!");
+      return;
+    }
+    if (students.some(s => s.roll === roll)) {
+      alert("⚠️ Roll number already exists!");
+      return;
+    }
+
+    students.push({ roll, name, dept, marks });
+    students.sort((a,b) => a.roll - b.roll);
+    localStorage.setItem("students", JSON.stringify(students));
+
+    alert("✅ Student added successfully!");
+    document.querySelectorAll("input").forEach(i=>i.value="");
+  }
+
+  function binarySearch(arr,key){
+    let l=0,h=arr.length-1;
+    while(l<=h){
+      const mid=Math.floor((l+h)/2);
+      if(arr[mid].roll===key) return mid;
+      else if(arr[mid].roll<key) l=mid+1;
+      else h=mid-1;
+    }
+    return -1;
+  }
+
+  function searchStudent(){
+    const roll=parseInt(document.getElementById("searchRoll").value);
+    if(isNaN(roll)){ alert("Enter roll number!"); return; }
+
+    const idx=binarySearch(students,roll);
+    const out=document.getElementById("output");
+    if(idx!==-1){
+      const s=students[idx];
+      out.innerHTML=`<p class='found'>✅ Student Found!</p>
+        <p><b>Roll:</b> ${s.roll}</p>
+        <p><b>Name:</b> ${s.name}</p>
+        <p><b>Department:</b> ${s.dept}</p>
+        <p><b>Marks:</b> ${s.marks}</p>`;
+    } else out.innerHTML=`<p class='notfound'>❌ Student not found!</p>`;
+  }
+</script>
+</body>
+</html>
+
+
+
